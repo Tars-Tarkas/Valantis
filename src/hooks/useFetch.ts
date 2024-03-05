@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CryptoJS from "crypto-js";
 
-const useFetch = (initialUrl: string, options?: RequestInit) => {
+const useFetch = (initialUrl: string, body: any) => {
   const [url, setUrl] = useState(initialUrl || "");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -15,7 +15,8 @@ const useFetch = (initialUrl: string, options?: RequestInit) => {
       setLoading(true);
       try {
         const response = await fetch(url, {
-          ...options,
+          body: JSON.stringify({ body }),
+          method: "POST",
           headers: {
             "X-Auth": authorizationString,
             Accept: "application/json",
@@ -26,7 +27,7 @@ const useFetch = (initialUrl: string, options?: RequestInit) => {
           throw new Error(`HTTP error status: ${response.status}`);
         }
         const json = await response.json();
-        setData(json);
+        setData(json.result);
         setLoading(false);
         setError(null);
       } catch (error: any) {
@@ -38,7 +39,7 @@ const useFetch = (initialUrl: string, options?: RequestInit) => {
     fetchData();
   }, [url]);
 
-  return [data, loading, error];
+  return [{ data, loading, error }];
 };
 
 export default useFetch;
