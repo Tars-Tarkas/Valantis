@@ -1,7 +1,11 @@
 import CryptoJS from "crypto-js";
-const apiReq = (url: string, body: any): Promise<any> => {
+
+export const apiReq = (url: string, body: any): Promise<any> => {
   let date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-  const authorizationString = CryptoJS.MD5(`Valantis_${date}`).toString();
+  const authorizationString = CryptoJS.MD5(
+    `${process.env.REACT_APP_URL_PASSWORD}_${date}`
+  ).toString();
+
   const fetchData = async () => {
     try {
       const response = await fetch(url, {
@@ -25,5 +29,3 @@ const apiReq = (url: string, body: any): Promise<any> => {
 
   return fetchData();
 };
-
-export default apiReq;

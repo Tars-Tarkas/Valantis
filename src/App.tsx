@@ -1,56 +1,17 @@
-import React, { useState, ChangeEvent, useEffect } from "react";
-// import useFetch from "./hooks/useFetch";
-import { getIds, getItems } from "./hooks/utils/api";
+import React from "react";
 import "./App.css";
+import { Cards } from "./components/Cards";
+import ThemeProvider from "react-bootstrap/ThemeProvider";
 
-function App() {
-  const [product, setProduct] = useState("");
-  const [ids, setIds] = useState<any[]>([]);
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    getIds()
-      .then((res) => {
-        setIds([...new Set(res.result)]);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
-  const handleChangeFind = (e: ChangeEvent<HTMLInputElement>) => {
-    setProduct(e.target.value);
-  };
-
-  useEffect(() => {
-    getItems(ids)
-      .then((res) => {
-        setProduct(res);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [ids]);
-
-  console.log(product);
-
+const App: React.FC = () => {
   return (
-    <>
-      <input
-        type="text"
-        name="product"
-        placeholder="Поиск по названию"
-        // value={product}
-        onChange={handleChangeFind}
-      />
-      <input type="text" name="price" placeholder="Поиск по цене" />
-      <input type="text" name="brand" placeholder="Поиск по бреду" />
-      {/* {data &&
-        data.data.map((item, index) => {
-          return <li key={index}>{item}</li>;
-        })} */}
-    </>
+    <ThemeProvider
+      breakpoints={["xxxl", "xxl", "xl", "lg", "md", "sm", "xs", "xxs"]}
+      minBreakpoint="xxs"
+    >
+      <Cards />
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
