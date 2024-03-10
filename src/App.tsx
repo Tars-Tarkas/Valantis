@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
-import { Cards } from "./components/Cards";
 import ThemeProvider from "react-bootstrap/ThemeProvider";
+import { Cards } from "./components/Cards";
 
 const App: React.FC = () => {
   return (

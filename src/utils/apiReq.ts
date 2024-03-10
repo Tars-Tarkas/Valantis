@@ -1,6 +1,6 @@
 import CryptoJS from "crypto-js";
 
-export const apiReq = (url: string, body: Object): Promise<any> => {
+export const apiReq = async (url: string, body: Object): Promise<any> => {
   let date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
 
   const authorizationString = CryptoJS.MD5(
@@ -10,7 +10,6 @@ export const apiReq = (url: string, body: Object): Promise<any> => {
   const fetchData = async () => {
     try {
       const response = await fetch(url, {
-        // mode: "no-cors",
         body: JSON.stringify(body),
         method: "POST",
         headers: {
@@ -21,9 +20,10 @@ export const apiReq = (url: string, body: Object): Promise<any> => {
       });
       if (!response.ok) {
         throw new Error(`HTTP error status: ${response.status}`);
+      } else {
+        const json = await response.json();
+        return json;
       }
-      const json = await response.json();
-      return json;
     } catch (error: any) {
       console.log(error);
     }

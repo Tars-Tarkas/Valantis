@@ -68,16 +68,22 @@ export const Cards: React.FC = () => {
   }, [ids, idsSlice, search]);
 
   useEffect(() => {
-    setIsLoading(true);
-    getSearch(selectSearch as keyof Object, search)
-      .then((res) => {
-        setFilteredIds([...new Set(res.result)]);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [search]);
+    if (search.length > 0) {
+      setIsLoading(true);
+      getSearch(selectSearch as keyof Object, search)
+        .then((res) => {
+          if (res && res.result.length > 0) {
+            setFilteredIds([...new Set(res.result)]);
+          } else {
+            setProducts([]);
+            setIsLoading(false);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [search, selectSearch]);
 
   useEffect(() => {
     if (filteredIds.length > 0) {
@@ -107,102 +113,119 @@ export const Cards: React.FC = () => {
 
   return (
     <>
-      <Navbar
-        expand="lg"
-        bg="light"
-        data-bs-theme="light"
-        className="bg-body-tertiary"
-      >
-        <Container>
-          <Navbar.Brand
-            style={{ fontSize: "36px", fontWeight: "700", color: "#191d3a" }}
-            href="#home"
-          >
-            Valantis
-          </Navbar.Brand>
-        </Container>
-      </Navbar>
-
-      <Container style={{ padding: "40px", minHeight: "100vH" }}>
-        <Form
-          onSubmit={handleSubmit}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
-            border: "1px solid white",
-            padding: "15px",
-            borderRadius: "10px",
-          }}
-          id="searchForm"
-          name="searchForm"
+      <header>
+        <Navbar
+          expand="lg"
+          bg="light"
+          data-bs-theme="light"
+          className="bg-body-tertiary"
         >
-          <Form.Label style={{ color: "white" }} htmlFor="searchForm">
-            Поиск
-          </Form.Label>
-          <Form.Select
-            onChange={handleSelectSearch}
-            value={selectSearch}
-            name="selectSearch"
+          <Container>
+            <Navbar.Brand
+              style={{ fontSize: "36px", fontWeight: "700", color: "#191d3a" }}
+              href="#home"
+            >
+              Valantis
+            </Navbar.Brand>
+          </Container>
+        </Navbar>
+      </header>
+      <main>
+        <Container style={{ padding: "40px" }}>
+          <Form
+            onSubmit={handleSubmit}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              border: "1px solid white",
+              padding: "15px",
+              borderRadius: "10px",
+            }}
+            id="searchForm"
+            name="searchForm"
           >
-            <option value="product">По названию продукта</option>
-            <option value="brand">По названию бренда</option>
-            <option value="price">По цене</option>
-          </Form.Select>
-          <Form.Control
-            name="search"
-            type="search"
-            id="searchInput"
-            onChange={handleSearch}
-          />
-        </Form>
-        {isLoading ? (
-          <div className="vh-100 d-flex justify-content-center align-items-center">
-            <Spinner animation="border" variant="light" />
-          </div>
-        ) : (
-          <>
-            <Row lg={3} xs={1} md={2} sm={2} xxs={1} className="g-4 mt-0 mb-5">
-              {products &&
-                products.map((item, index) => {
-                  return (
-                    <Col key={index}>
-                      <Card bg="light" text="dark">
-                        <Card.Header
-                          color="red"
-                          style={{ height: "70px", textAlign: "center" }}
-                        >
-                          {item.product}
-                        </Card.Header>
-                        <Card.Body
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                          color="dark"
-                        >
-                          <Card.Text>
-                            Brand: {item.brand ? item.brand : "-"}
-                          </Card.Text>
-                          <Card.Text>Price: {item.price}</Card.Text>
-                        </Card.Body>
-                        <Card.Footer></Card.Footer>
-                      </Card>
-                    </Col>
-                  );
-                })}
-            </Row>
-            <PaginationCards
-              totalPage={
-                filteredIds.length > 0 ? filteredIds.length : ids.length
-              }
-              currentPage={currentPage}
-              postPerPage={postPerPage}
-              setCurrentPage={setCurrentPage}
+            <Form.Label style={{ color: "white" }} htmlFor="searchForm">
+              Поиск
+            </Form.Label>
+            <Form.Select
+              onChange={handleSelectSearch}
+              value={selectSearch}
+              name="selectSearch"
+            >
+              <option value="product">По названию продукта</option>
+              <option value="brand">По названию бренда</option>
+              <option value="price">По цене</option>
+            </Form.Select>
+            <Form.Control
+              name="search"
+              type="search"
+              id="searchInput"
+              onChange={handleSearch}
             />
-          </>
-        )}
-      </Container>
+          </Form>
+          {isLoading ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: `calc(100vH - 500px)`,
+              }}
+            >
+              <Spinner animation="border" variant="light" />
+            </div>
+          ) : (
+            <>
+              <Row
+                lg={3}
+                xs={1}
+                md={2}
+                sm={2}
+                xxs={1}
+                className="g-4 mt-0 mb-5"
+              >
+                {products &&
+                  products.map((item, index) => {
+                    return (
+                      <Col key={index}>
+                        <Card bg="light" text="dark">
+                          <Card.Header
+                            color="red"
+                            style={{ height: "70px", textAlign: "center" }}
+                          >
+                            {item.product}
+                          </Card.Header>
+                          <Card.Body
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                            color="dark"
+                          >
+                            <Card.Text>
+                              Brand: {item.brand ? item.brand : "-"}
+                            </Card.Text>
+                            <Card.Text>Price: {item.price}</Card.Text>
+                          </Card.Body>
+                          <Card.Footer></Card.Footer>
+                        </Card>
+                      </Col>
+                    );
+                  })}
+              </Row>
+              <PaginationCards
+                totalPage={
+                  filteredIds.length > 0 ? filteredIds.length : ids.length
+                }
+                currentPage={currentPage}
+                postPerPage={postPerPage}
+                setCurrentPage={setCurrentPage}
+              />
+            </>
+          )}
+        </Container>
+      </main>
     </>
   );
 };
