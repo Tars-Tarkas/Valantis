@@ -1,7 +1,8 @@
 import CryptoJS from "crypto-js";
 
-export const apiReq = (url: string, body: any): Promise<any> => {
+export const apiReq = (url: string, body: Object): Promise<any> => {
   let date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+
   const authorizationString = CryptoJS.MD5(
     `${process.env.REACT_APP_URL_PASSWORD}_${date}`
   ).toString();
@@ -9,6 +10,7 @@ export const apiReq = (url: string, body: any): Promise<any> => {
   const fetchData = async () => {
     try {
       const response = await fetch(url, {
+        // mode: "no-cors",
         body: JSON.stringify(body),
         method: "POST",
         headers: {

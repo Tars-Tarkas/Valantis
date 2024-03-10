@@ -101,6 +101,10 @@ export const Cards: React.FC = () => {
     setSearch(e.target.value);
   };
 
+  const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
   return (
     <>
       <Navbar
@@ -121,6 +125,7 @@ export const Cards: React.FC = () => {
 
       <Container style={{ padding: "40px", minHeight: "100vH" }}>
         <Form
+          onSubmit={handleSubmit}
           style={{
             display: "flex",
             flexDirection: "column",
@@ -130,16 +135,22 @@ export const Cards: React.FC = () => {
             borderRadius: "10px",
           }}
           id="searchForm"
+          name="searchForm"
         >
           <Form.Label style={{ color: "white" }} htmlFor="searchForm">
             Поиск
           </Form.Label>
-          <Form.Select onChange={handleSelectSearch} value={selectSearch}>
+          <Form.Select
+            onChange={handleSelectSearch}
+            value={selectSearch}
+            name="selectSearch"
+          >
             <option value="product">По названию продукта</option>
             <option value="brand">По названию бренда</option>
             <option value="price">По цене</option>
           </Form.Select>
           <Form.Control
+            name="search"
             type="search"
             id="searchInput"
             onChange={handleSearch}

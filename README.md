@@ -1,3 +1,15 @@
+Запустить проект:
+
+```
+> git clone https://github.com/Tars-Tarkas/Valantis.git
+
+> cd valantis
+
+> npm install
+
+> npm run start
+```
+
 # Задание
 
 Используя предоставленный апи создать страницу, которая отображает список товаров.  
